@@ -26,10 +26,55 @@ Classe para rodar os testes:
 # API
 
 ## Response
-O corpo de resposta padrão de erros irá trazer a formatação:
+Exemplo de corpo de resposta de erros:
 ```JSON
 {
   "error": "Descrição do problema"
+}
+```
+
+Exemplo de corpo de resposta de listagens:
+```JSON
+{
+  "content": [
+    {
+      "id": "3b209ff8-49d3-4283-9bd8-a3059f4136b1",
+      "tipo": "PRODUTO",
+      "ativo": false,
+      "valorCusto": 100.00
+    },
+    {
+      "id": "50b98b24-2935-44f4-8781-94b596cbec8d",
+      "tipo": "PRODUTO",
+      "ativo": true,
+      "valorCusto": 100.00
+    }
+  ],
+  "pageable": {
+    "sort": {
+      "unsorted": true,
+      "sorted": false,
+      "empty": true
+    },
+    "offset": 0,
+    "pageNumber": 0,
+    "pageSize": 15,
+    "paged": true,
+    "unpaged": false
+  },
+  "totalPages": 1,
+  "last": true,
+  "totalElements": 2,
+  "size": 15,
+  "number": 0,
+  "sort": {
+    "unsorted": true,
+    "sorted": false,
+    "empty": true
+  },
+  "numberOfElements": 2,
+  "first": true,
+  "empty": false
 }
 ```
 
