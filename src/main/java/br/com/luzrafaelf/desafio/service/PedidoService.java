@@ -1,13 +1,14 @@
 package br.com.luzrafaelf.desafio.service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
+import javax.validation.ValidationException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -28,31 +29,32 @@ import br.com.luzrafaelf.desafio.repository.PedidoRepository;
 @Transactional
 public class PedidoService {
 
-	private final Logger logger = Logger.getLogger(getClass().getName());
-
 	@Autowired
 	private PedidoRepository pedidoRepository;
 
 	@Autowired
 	private PedidoItemService pedidoItemService;
 
-	public PedidoDTO entityToDTO(Pedido entity) {
+	@Autowired
+	private ProdutoService produtoService;
+
+	protected PedidoDTO entityToDTO(Pedido entity) {
 		PedidoDTO dto = new PedidoDTO();
 		dto.setId(entity.getId());
 		dto.setSituacao(entity.getSituacao());
 		dto.setValorTotal(entity.getValorTotal());
-		if (!entity.getItens().isEmpty()) {
-			List<PedidoItemDTO> itens = entity.getItens().stream().map(i -> pedidoItemService.entityToDTO(i)).collect(Collectors.toList());
-			dto.setItens(itens);
-		}
+		dto.setData(entity.getData());
+		List<PedidoItemDTO> itens = entity.getItens().stream().map(i -> pedidoItemService.entityToDTO(i)).collect(Collectors.toList());
+		dto.setItens(itens);
 		return dto;
 	}
 
-	public Pedido dtoToEntity(PedidoDTO dto) {
+	protected Pedido dtoToEntity(PedidoDTO dto) {
 		Pedido entity = new Pedido();
 		entity.setId(dto.getId());
 		entity.setSituacao(dto.getSituacao());
 		entity.setValorTotal(dto.getValorTotal());
+		entity.setData(dto.getData());
 		List<PedidoItem> itens = dto.getItens().stream().map(i -> {
 			PedidoItem pedidoItem = pedidoItemService.dtoToEntity(i);
 			pedidoItem.setPedido(entity);
@@ -62,8 +64,8 @@ public class PedidoService {
 		return entity;
 	}
 
-	public Page<PedidoDTO> findAll(Pageable pageable) {
-		Page<Pedido> findAll = pedidoRepository.findAll(pageable);
+	public Page<PedidoDTO> findAll(Pageable pageable, LocalDate dataInicial, LocalDate dataFinal, SituacaoPedido situacao) {
+		Page<Pedido> findAll = pedidoRepository.findAllFiltered(dataInicial, dataFinal, situacao, pageable);
 		List<PedidoDTO> listDtos = findAll.getContent().stream().map(p -> entityToDTO(p)).collect(Collectors.toList());
 		return new PageImpl<>(listDtos, pageable, findAll.getTotalElements());
 	}
@@ -74,14 +76,17 @@ public class PedidoService {
 
 	public PedidoDTO create(PedidoDTO dto) {
 		Pedido entity = pedidoRepository.save(dtoToEntity(dto));
-		calcularTotal(BigDecimal.ZERO, entity);
+		calcularTotal(entity);
 		return entityToDTO(entity);
 	}
 
 	public PedidoDTO update(String id, PedidoDTO dto) {
 		dto.setId(id);
+		PedidoDTO pedido = findOneById(id);
+
+		dto.setItens(pedido.getItens());
 		Pedido entity = pedidoRepository.save(dtoToEntity(dto));
-		calcularTotal(BigDecimal.ZERO, entity);
+		calcularTotal(entity);
 		return entityToDTO(entity);
 	}
 
@@ -114,10 +119,57 @@ public class PedidoService {
 		return entityToDTO(entity);
 	}
 
+	private void calcularTotal(Pedido entity) {
+		calcularTotal(BigDecimal.ZERO, entity);
+	}
+
 	private void calcularTotal(BigDecimal percentualDesconto, Pedido entity) {
 		BigDecimal valorTotalProdutos = entity.getItens().stream().filter(i -> i.getProduto().getTipo() == TipoProduto.PRODUTO).map(i -> i.getProduto().getValorCusto()).reduce(BigDecimal.ZERO, BigDecimal::add);
 		BigDecimal valorTotalServicos = entity.getItens().stream().filter(i -> i.getProduto().getTipo() == TipoProduto.SERVICO).map(i -> i.getProduto().getValorCusto()).reduce(BigDecimal.ZERO, BigDecimal::add);
 		BigDecimal valorDesconto = percentualDesconto.multiply(valorTotalProdutos).multiply(new BigDecimal("0.01"));
 		entity.setValorTotal(valorTotalProdutos.add(valorTotalServicos).subtract(valorDesconto));
+	}
+
+	public PedidoDTO adicionarItem(String id, PedidoItemDTO item) {
+
+		if (!produtoService.findOne(item.getProduto().getId()).getAtivo()) {
+			throw new ValidationException("Produtos inativos não podem ser adicionados ao pedido");
+		}
+
+		PedidoDTO dto = findOne(id);
+		dto.getItens().add(item);
+
+		Pedido entity = dtoToEntity(dto);
+		calcularTotal(entity);
+		entity = pedidoRepository.save(entity);
+		return entityToDTO(entity);
+	}
+
+	public PedidoDTO removerItem(String id, PedidoItemDTO item) {
+		PedidoDTO dto = findOne(id);
+
+		List<PedidoItemDTO> itens = dto.getItens().stream().filter(i -> !i.getId().equals(item.getId())).collect(Collectors.toList());
+		dto.getItens().clear();
+		dto.setItens(itens);
+
+		Pedido entity = dtoToEntity(dto);
+		calcularTotal(entity);
+		entity = pedidoRepository.save(entity);
+		return entityToDTO(entity);
+	}
+
+	public PedidoDTO atualizarItem(String id, PedidoItemDTO item) {
+
+		PedidoDTO dto = findOne(id);
+		for (PedidoItemDTO i : dto.getItens()) {
+			if (i.getId().equals(id)) {
+				i = item;
+				break;
+			}
+		}
+
+		Pedido entity = dtoToEntity(dto);
+		entity = pedidoRepository.save(entity);
+		return entityToDTO(entity);
 	}
 }

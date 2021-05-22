@@ -8,7 +8,7 @@ public class ErrorDTO {
 		this.error = error;
 	}
 
-	public String getDetails() {
+	public String getError() {
 		return error;
 	}
 

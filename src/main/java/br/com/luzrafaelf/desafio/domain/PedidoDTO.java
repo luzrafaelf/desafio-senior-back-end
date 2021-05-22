@@ -1,6 +1,7 @@
 package br.com.luzrafaelf.desafio.domain;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +15,9 @@ public class PedidoDTO {
 
 	private SituacaoPedido situacao;
 
-	private BigDecimal valorTotal;
+	private BigDecimal valorTotal = BigDecimal.ZERO;
+
+	private LocalDate data;
 
 	public String getId() {
 		return id;
@@ -46,6 +49,14 @@ public class PedidoDTO {
 
 	public void setValorTotal(BigDecimal valorTotal) {
 		this.valorTotal = valorTotal;
+	}
+
+	public LocalDate getData() {
+		return data;
+	}
+
+	public void setData(LocalDate data) {
+		this.data = data;
 	}
 
 }

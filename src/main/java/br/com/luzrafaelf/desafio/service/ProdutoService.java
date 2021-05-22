@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import br.com.luzrafaelf.desafio.domain.ProdutoDTO;
 import br.com.luzrafaelf.desafio.model.Produto;
+import br.com.luzrafaelf.desafio.model.TipoProduto;
 import br.com.luzrafaelf.desafio.repository.ProdutoRepository;
 
 @Service
@@ -24,7 +25,7 @@ public class ProdutoService {
 	@Autowired
 	private ProdutoRepository produtoRepository;
 
-	public ProdutoDTO entityToDTO(Produto entity) {
+	protected ProdutoDTO entityToDTO(Produto entity) {
 		ProdutoDTO dto = new ProdutoDTO();
 		dto.setId(entity.getId());
 		dto.setTipo(entity.getTipo());
@@ -33,7 +34,7 @@ public class ProdutoService {
 		return dto;
 	}
 
-	public Produto dtoToEntity(ProdutoDTO dto) {
+	protected Produto dtoToEntity(ProdutoDTO dto) {
 		Produto entity = new Produto();
 		entity.setId(dto.getId());
 		entity.setTipo(dto.getTipo());
@@ -42,8 +43,8 @@ public class ProdutoService {
 		return entity;
 	}
 
-	public Page<ProdutoDTO> findAll(Pageable pageable) {
-		Page<Produto> findAll = produtoRepository.findAll(pageable);
+	public Page<ProdutoDTO> findAll(TipoProduto tipo, Boolean ativo, Pageable pageable) {
+		Page<Produto> findAll = produtoRepository.findAllByTipo(tipo, ativo, pageable);
 		List<ProdutoDTO> listDtos = findAll.getContent().stream().map(p -> entityToDTO(p)).collect(Collectors.toList());
 		return new PageImpl<>(listDtos, pageable, findAll.getTotalElements());
 	}

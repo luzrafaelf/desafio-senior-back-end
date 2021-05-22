@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import br.com.luzrafaelf.desafio.domain.PedidoItemDTO;
 import br.com.luzrafaelf.desafio.model.PedidoItem;
+import br.com.luzrafaelf.desafio.model.Produto;
 import br.com.luzrafaelf.desafio.repository.ProdutoRepository;
 
 @Service
@@ -19,17 +20,18 @@ public class PedidoItemService {
 	@Autowired
 	private ProdutoRepository produtoRepository;
 
-	public PedidoItemDTO entityToDTO(PedidoItem entity) {
+	protected PedidoItemDTO entityToDTO(PedidoItem entity) {
 		PedidoItemDTO dto = new PedidoItemDTO();
 		dto.setId(entity.getId());
 		dto.setProduto(produtoService.findOne(entity.getProduto().getId()));
 		return dto;
 	}
 
-	public PedidoItem dtoToEntity(PedidoItemDTO dto) {
+	protected PedidoItem dtoToEntity(PedidoItemDTO dto) {
 		PedidoItem entity = new PedidoItem();
-		entity.setId(entity.getId());
-		entity.setProduto(produtoRepository.findById(dto.getProduto().getId()).get());
+		entity.setId(dto.getId());
+		Produto produto = produtoRepository.findById(dto.getProduto().getId()).get();
+		entity.setProduto(produto);
 		return entity;
 	}
 

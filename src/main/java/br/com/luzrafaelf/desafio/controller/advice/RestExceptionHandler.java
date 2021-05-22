@@ -3,6 +3,7 @@ package br.com.luzrafaelf.desafio.controller.advice;
 import java.util.NoSuchElementException;
 
 import javax.validation.ConstraintViolationException;
+import javax.validation.ValidationException;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,6 +38,12 @@ public class RestExceptionHandler {
 	public ResponseEntity<?> handleConstraintViolationException(ConstraintViolationException exception) {
 		ErrorDTO error = new ErrorDTO(exception.getLocalizedMessage());
 		return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+	}
+
+	@ExceptionHandler(ValidationException.class)
+	public ResponseEntity<?> handleValidationException(ValidationException exception) {
+		ErrorDTO error = new ErrorDTO(exception.getLocalizedMessage());
+		return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 }

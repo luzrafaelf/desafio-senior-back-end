@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.luzrafaelf.desafio.domain.ProdutoDTO;
+import br.com.luzrafaelf.desafio.model.TipoProduto;
 import br.com.luzrafaelf.desafio.service.ProdutoService;
 
 @RestController
@@ -26,9 +27,16 @@ public class ProdutoRestController {
 	private ProdutoService produtoService;
 
 	@GetMapping
-	private Page<ProdutoDTO> findAll(@RequestParam(name = "$page") Integer pageNumber, @RequestParam(name = "$quantity") Integer quantity) {
+	private Page<ProdutoDTO> findAll(
+	//@formatter:off
+			@RequestParam(name = "$page") Integer pageNumber, 
+			@RequestParam(name = "$quantity") Integer quantity,
+			@RequestParam(name = "tipo", required = false) TipoProduto tipo,
+			@RequestParam(name = "ativo", required = false) Boolean ativo
+		//@formatter:on
+	) {
 		PageRequest pageable = PageRequest.of(pageNumber, quantity);
-		return produtoService.findAll(pageable);
+		return produtoService.findAll(tipo, ativo, pageable);
 	};
 
 	@GetMapping("/{id}")

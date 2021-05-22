@@ -1,6 +1,7 @@
 package br.com.luzrafaelf.desafio.model;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -38,6 +39,9 @@ public class Pedido {
 	@Column(name = "valor_total", nullable = false)
 	private BigDecimal valorTotal;
 
+	@Column(name = "data", nullable = false)
+	private LocalDate data;
+
 	public String getId() {
 		return id;
 	}
@@ -68,6 +72,14 @@ public class Pedido {
 
 	public void setValorTotal(BigDecimal valorTotal) {
 		this.valorTotal = valorTotal;
+	}
+
+	public LocalDate getData() {
+		return data;
+	}
+
+	public void setData(LocalDate data) {
+		this.data = data;
 	}
 
 }
