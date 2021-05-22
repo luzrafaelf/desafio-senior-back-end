@@ -93,8 +93,8 @@ Parâmetros:
 |----------------|---------------|-------------|---------------------------------------------
 | $page          | Sim           | int         | Número da página                               
 | $quantity      | Sim           | int         | Quantidade de itens por página                  
-| data-inicial   | Não           | yyyy-MM-dd  | Irá trazer todos os pedidos a partir desta data 
-| data-final     | Não           | yyyy-MM-dd  | Irá trazer todos os pedidos até esta data       
+| data-inicial   | Não           | yyyy-MM-dd  | Irá trazer todos os pedidos com a data igual ou superior à informada
+| data-final     | Não           | yyyy-MM-dd  | Irá trazer todos os pedidos com a data igual ou inferior à informada       
 | situacao       | Não           | String      | Irá trazer os pedidos com essa situação (ABERTO ou FECHADO)      
 
 ### Ler
