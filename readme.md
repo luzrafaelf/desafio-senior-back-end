@@ -3,7 +3,7 @@
 # Ambiente
 
 ### Configurações
-Configurações de base e de porta podem ser alteradas nos arquivos;
+Configurações de base e de porta podem ser alteradas nos arquivos:
 
 Por padrão a aplicação roda em uma base POSTGRESQL 
 - ```/desafio-senior/src/main/resources/application.properties```
