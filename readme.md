@@ -36,7 +36,7 @@ O corpo de resposta padrão de erros irá trazer a formatação:
 ## Produtos
 
 ### Listar
-[GET] ```/rest/produtos ```
+[GET] ```/rest/produtos```
 Irá listar todos os produtos cadastrados
 
 Parâmetros:
@@ -48,11 +48,11 @@ Parâmetros:
 | Ativo          | Não           | Boolean     | Irá trazer os produtos ativos ou inativos (true ou false)
 
 ### Ler
-[GET] ```/rest/produtos/{id do produto} ```
+[GET] ```/rest/produtos/{id do produto}```
 Irá trazer um produto cadastrado
 
 ### Criar
-[POST] ```/rest/produtos ```
+[POST] ```/rest/produtos```
 Irá criar um produto
 
 Exemplo de corpo de request:
@@ -65,7 +65,7 @@ Exemplo de corpo de request:
 ```
 
 ### Atualizar
-[PUT] ```/rest/produtos/{id do produto} ```
+[PUT] ```/rest/produtos/{id do produto}```
 Irá atualizar os dados de um produto já cadastrado
 
 Exemplo de corpo de request:
@@ -78,14 +78,14 @@ Exemplo de corpo de request:
 ```
 
 ### Remover
-[DELETE] ```/rest/produtos/{id do produto} ```
+[DELETE] ```/rest/produtos/{id do produto}```
 Irá deletar um produto cadastrado
 - O produto não pode fazer parte de um pedido
 
 ## Pedidos
 
 ### Listar
-[GET] ```/rest/pedidos ```
+[GET] ```/rest/pedidos```
 Irá listar todos os pedidos cadastrados
 
 Parâmetros:
@@ -98,11 +98,11 @@ Parâmetros:
 | situacao       | Não           | String      | Irá trazer os pedidos com essa situação (ABERTO ou FECHADO)      
 
 ### Ler
-[GET] ```/rest/pedidos/{id do pedido} ```
+[GET] ```/rest/pedidos/{id do pedido}```
 Irá trazer um produto cadastrado
 
 ### Criar
-[POST] ```/rest/pedidos/ ```
+[POST] ```/rest/pedidos/```
 Irá criar um pedido
 
 Exemplo de corpo de request:
@@ -114,7 +114,7 @@ Exemplo de corpo de request:
 ```
 
 ### Atualizar
-[PUT] ```/rest/pedidos/ ```
+[PUT] ```/rest/pedidos/```
 Irá atualizar os dados do pedido
 
 Exemplo de corpo de request:
@@ -126,11 +126,11 @@ Exemplo de corpo de request:
 ```
 
 ### Remover
-[DELETE] ```/rest/pedidos/{id do pedido} ```
+[DELETE] ```/rest/pedidos/{id do pedido}```
 Remove o pedido e todos os seus itens
 
 ### Atribuir desconto ao pedido
-[PUT] ```/rest/pedidos/{id do pedido}/desconto ```
+[PUT] ```/rest/pedidos/{id do pedido}/desconto```
 Irá atribuir um percentual de desconto para o pedido
 - O valor do percentual precisa estar entre 0 e 100
 
@@ -144,7 +144,7 @@ Exemplo de corpo de request:
 ## Itens do Pedido
 
 ### Adicionar item ao pedido
-[PUT] ```/rest/pedidos/{id do pedido}/adicionar-item ```
+[PUT] ```/rest/pedidos/{id do pedido}/adicionar-item```
 Irá criar o item no pedido
 - Isso irá recalcular o "valorTotal" do pedido
 - Somente pode adicionar o item se o produto estiver ativo
@@ -159,7 +159,7 @@ Exemplo de corpo de request:
 }
 ```
 ### Atualizar item do pedido
-[PUT] ```/rest/pedidos/{id do pedido}/adicionar-item ```
+[PUT] ```/rest/pedidos/{id do pedido}/adicionar-item```
 Irá atualizar o item no pedido
 - Isso irá recalcular o "valorTotal" do pedido
 - 
@@ -174,7 +174,7 @@ Exemplo de corpo de request:
 ```
 
 ### Remover item do pedido
-[PUT] ```/rest/pedidos/{id do pedido}/remover-item ```
+[PUT] ```/rest/pedidos/{id do pedido}/remover-item```
 Irá remover o item do pedido
 - Isso irá recalcular o "valorTotal" do pedido
 
